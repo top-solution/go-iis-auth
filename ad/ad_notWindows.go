@@ -3,8 +3,8 @@
 package ad
 
 func GetUser(authToken string) (string, string, string, error) {
-	return "MOCKID", "MOCKUSER", "MOCKDOMAIN", nil
+	return MockID, MockUser, MockDomain, nil
 }
 func GetGroups(authToken string) ([]string, error) {
-	return []string{"GROUP", "ANOTHERGROUP"}, nil
+	return []string{MockGroup1, MockGroup2}, nil
 }

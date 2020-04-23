@@ -5,6 +5,19 @@ import (
 	"strconv"
 )
 
+var (
+	// MockID is a mocked ID used on non-Windows platforms
+	MockID = "MOCKID"
+	// MockUser is a mocked username used on non-Windows platforms
+	MockUser = "MOCKUSER"
+	// MockDomain is a mocked domain name used on non-Windows platforms
+	MockDomain = "MOCKDOMAIN"
+	// MockGroup1 is a mocked group name used on non-Windows platforms
+	MockGroup1 = "GROUP"
+	// MockGroup2 is another mocked group name used on non-Windows platforms
+	MockGroup2 = "ANOTHERGROUP"
+)
+
 // User contains info about some Windows/Active Directory user
 type User struct {
 	ID       string
