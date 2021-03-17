@@ -10,19 +10,26 @@ import (
 // WithUser adds information about the Windows user in the request context
 // It works by taking the token forwarded by IIS+HttpPlatformHandler and then asking Windows about its identity
 func WithUser() func(http.Handler) http.Handler {
+	return WithUserConditionally(func(req *http.Request) bool { return true })
+}
+
+// WithUserConditionally is the same as WithUser, but with the added possibility of enabling the authentication conditionally
+func WithUserConditionally(enabler func(req *http.Request) bool) func(http.Handler) http.Handler {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			req := r
-			authToken := r.Header.Get("X-IIS-WindowsAuthToken")
-			sid, username, domain, err := ad.GetUser(authToken)
-			if err != nil {
-				http.Error(w, "unable to fetch the user", 401)
-				return
+			if enabler(req) {
+				authToken := r.Header.Get("X-IIS-WindowsAuthToken")
+				sid, username, domain, err := ad.GetUser(authToken)
+				if err != nil {
+					http.Error(w, "unable to fetch the user", 401)
+					return
+				}
+				ctx := context.WithValue(r.Context(), sidKey, sid)
+				ctx = context.WithValue(ctx, usernameKey, username)
+				ctx = context.WithValue(ctx, domainkey, domain)
+				req = r.WithContext(ctx)
 			}
-			ctx := context.WithValue(r.Context(), sidKey, sid)
-			ctx = context.WithValue(ctx, usernameKey, username)
-			ctx = context.WithValue(ctx, domainkey, domain)
-			req = r.WithContext(ctx)
 
 			h.ServeHTTP(w, req)
 		})
