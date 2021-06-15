@@ -11,20 +11,7 @@ import (
 // WithUser adds information about the Windows user in the request context
 // It works by taking the token forwarded by IIS+HttpPlatformHandler and then asking Windows about its identity
 func WithUser() goa.Middleware {
-	return func(h goa.Handler) goa.Handler {
-		return func(ctx context.Context, rw http.ResponseWriter, r *http.Request) error {
-			authToken := r.Header.Get("X-IIS-WindowsAuthToken")
-			sid, username, domain, err := ad.GetUser(authToken)
-			if nil != err {
-				return errUnauthorized("unable to get ad user")
-			}
-			ctx = context.WithValue(ctx, sidKey, sid)
-			ctx = context.WithValue(ctx, usernameKey, username)
-			ctx = context.WithValue(ctx, domainkey, domain)
-
-			return h(ctx, rw, r)
-		}
-	}
+	return WithUserConditionally(func(req *http.Request) bool { return true })
 }
 
 // WithUserConditionally is the same as WithUser, but with the added possibility of enabling the authentication conditionally
