@@ -13,6 +13,9 @@ import (
 func WithUser() goa.Middleware {
 	return func(h goa.Handler) goa.Handler {
 		return func(ctx context.Context, rw http.ResponseWriter, r *http.Request) error {
+			if r.RequestURI == "/version" {
+				return h(ctx, rw, r)
+			}
 			authToken := r.Header.Get("X-IIS-WindowsAuthToken")
 			sid, username, domain, err := ad.GetUser(authToken)
 			if nil != err {
