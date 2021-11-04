@@ -24,6 +24,7 @@ func getToken(authToken string) (windows.Token, error) {
 // GetUser returns the SID, the username and the domain name associated to the user identified by authToken
 func GetUser(authToken string) (string, string, string, error) {
 	token, err := getToken(authToken)
+	defer token.Close()
 	if err != nil {
 		return "", "", "", errors.New("unable to get token")
 	}
@@ -43,6 +44,7 @@ func GetUser(authToken string) (string, string, string, error) {
 // GetGroups returns all groups the user identified by authToken belongs to
 func GetGroups(authToken string) ([]string, error) {
 	token, err := getToken(authToken)
+	defer token.Close()
 	if err != nil {
 		return nil, errors.New("unable to get token")
 	}
