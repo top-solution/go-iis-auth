@@ -25,9 +25,9 @@ func WithUserConditionally(enabler func(req *http.Request) bool) func(http.Handl
 					http.Error(w, "unable to fetch the user", 401)
 					return
 				}
-				ctx := context.WithValue(r.Context(), sidKey, sid)
-				ctx = context.WithValue(ctx, usernameKey, username)
-				ctx = context.WithValue(ctx, domainkey, domain)
+				ctx := context.WithValue(r.Context(), SidKey, sid)
+				ctx = context.WithValue(ctx, UsernameKey, username)
+				ctx = context.WithValue(ctx, Domainkey, domain)
 				req = r.WithContext(ctx)
 			}
 
@@ -48,7 +48,7 @@ func User(ctx context.Context) ad.User {
 
 // Username returns the username stored in the context
 func Username(ctx context.Context) string {
-	if username, ok := ctx.Value(usernameKey).(string); ok {
+	if username, ok := ctx.Value(UsernameKey).(string); ok {
 		return username
 	}
 	return ""
@@ -56,7 +56,7 @@ func Username(ctx context.Context) string {
 
 // Domain returns the domain stored in the context
 func Domain(ctx context.Context) string {
-	if domain, ok := ctx.Value(domainkey).(string); ok {
+	if domain, ok := ctx.Value(Domainkey).(string); ok {
 		return domain
 	}
 	return ""
@@ -64,7 +64,7 @@ func Domain(ctx context.Context) string {
 
 // SID returns the SID stored in the context
 func SID(ctx context.Context) string {
-	if sid, ok := ctx.Value(sidKey).(string); ok {
+	if sid, ok := ctx.Value(SidKey).(string); ok {
 		return sid
 	}
 	return ""

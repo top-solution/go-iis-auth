@@ -16,14 +16,14 @@ func WithGroups() goa.Middleware {
 			if nil != err {
 				return errUnauthorized("unable to get ad groups")
 			}
-			ctx = context.WithValue(ctx, groupsKey, groups)
+			ctx = context.WithValue(ctx, GroupsKey, groups)
 			return h(ctx, rw, r)
 		}
 	}
 }
 
 func Groups(ctx context.Context) []string {
-	if groups, ok := ctx.Value(groupsKey).([]string); ok {
+	if groups, ok := ctx.Value(GroupsKey).([]string); ok {
 		return groups
 	}
 	return nil

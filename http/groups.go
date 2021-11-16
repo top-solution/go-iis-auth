@@ -18,7 +18,7 @@ func WithGroups() func(http.Handler) http.Handler {
 				http.Error(w, "unable to fetch groups", 401)
 				return
 			}
-			ctx := context.WithValue(r.Context(), groupsKey, groups)
+			ctx := context.WithValue(r.Context(), GroupsKey, groups)
 			req = r.WithContext(ctx)
 
 			h.ServeHTTP(w, req)
@@ -28,7 +28,7 @@ func WithGroups() func(http.Handler) http.Handler {
 
 // Groups extract the list of groups of the user from the request context
 func Groups(ctx context.Context) []string {
-	if groups, ok := ctx.Value(groupsKey).([]string); ok {
+	if groups, ok := ctx.Value(GroupsKey).([]string); ok {
 		return groups
 	}
 	return nil

@@ -24,9 +24,9 @@ func WithUserConditionally(enabler func(req *http.Request) bool) goa.Middleware 
 				if nil != err {
 					return errUnauthorized("unable to get ad user")
 				}
-				ctx = context.WithValue(ctx, sidKey, sid)
-				ctx = context.WithValue(ctx, usernameKey, username)
-				ctx = context.WithValue(ctx, domainkey, domain)
+				ctx = context.WithValue(ctx, SidKey, sid)
+				ctx = context.WithValue(ctx, UsernameKey, username)
+				ctx = context.WithValue(ctx, Domainkey, domain)
 			}
 
 			return h(ctx, rw, r)
@@ -46,7 +46,7 @@ func User(ctx context.Context) ad.User {
 
 // Username returns the username stored in the context
 func Username(ctx context.Context) string {
-	if username, ok := ctx.Value(usernameKey).(string); ok {
+	if username, ok := ctx.Value(UsernameKey).(string); ok {
 		return username
 	}
 	return ""
@@ -54,7 +54,7 @@ func Username(ctx context.Context) string {
 
 // Domain returns the domain stored in the context
 func Domain(ctx context.Context) string {
-	if domain, ok := ctx.Value(domainkey).(string); ok {
+	if domain, ok := ctx.Value(Domainkey).(string); ok {
 		return domain
 	}
 	return ""
@@ -62,7 +62,7 @@ func Domain(ctx context.Context) string {
 
 // SID returns the SID stored in the context
 func SID(ctx context.Context) string {
-	if sid, ok := ctx.Value(sidKey).(string); ok {
+	if sid, ok := ctx.Value(SidKey).(string); ok {
 		return sid
 	}
 	return ""
